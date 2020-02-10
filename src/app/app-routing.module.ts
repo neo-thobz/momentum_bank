@@ -9,10 +9,6 @@ const routes: Routes = [
     loadChildren: () => import('./public/login/login.module').then( m => m.LoginPageModule)
   },
   {
-    path: 'register',
-    loadChildren: () => import('./public/register/register.module').then( m => m.RegisterPageModule)
-  },
-  {
     path : 'members',
     canActivate: [AuthGuardService],
     loadChildren: () => import('./members/members-routing.module').then( m => m.MembersRoutingModule)

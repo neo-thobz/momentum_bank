@@ -37,15 +37,4 @@ export class LoginPage implements OnInit {
 
     await alert.present();
   }
-
-  async loginFailedAlert() {
-    const alert = await this.alertController.create({
-      header: 'Sorry',
-      message: 'You have entered invalid credentials.',
-      buttons: ['OK']
-    });
-
-    await alert.present();
-  }
-
 }

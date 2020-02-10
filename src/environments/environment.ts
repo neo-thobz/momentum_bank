@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  API_URL : 'https://momentum-retail-practical-test.firebaseio.com/clients/'
+  USERS_URL : 'https://momentum-retail-practical-test.firebaseio.com/clients/',
+  ACCOUNTS_URL : 'https://momentum-retail-practical-test.firebaseio.com/accounts/'
 };
 
 export const firebaseConfig = {
