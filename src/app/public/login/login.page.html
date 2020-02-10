@@ -5,10 +5,18 @@
 </ion-header>
 
 <ion-content>
-  <ion-button (click)="userLogin()" expand="block">
-    login
-  </ion-button>
-  <ion-button  href="/register" color="secondary" routerDirection="foward">
-    Register
-  </ion-button>
+
+  <ion-list>
+    <ion-item>
+      <ion-label position="floationg">Email</ion-label>
+      <ion-input type="email" [(ngModel)]="email" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floationg">Password</ion-label>
+      <ion-input type="password" [(ngModel)]="password" required></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <ion-button (click)="userLogin()" expand="block" color="dark">login</ion-button>
 </ion-content>

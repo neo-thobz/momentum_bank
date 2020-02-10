@@ -3,7 +3,13 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  API_URL : 'https://momentum-retail-practical-test.firebaseio.com/clients/'
+};
+
+export const firebaseConfig = {
+  apiKey: 'AIzaSyAR4Yezxk7Ao4qeFntu7tIvE7pH28Eh64Y',
+  authDomain: 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?',
 };
 
 /*
