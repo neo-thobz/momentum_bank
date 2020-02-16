@@ -27,7 +27,7 @@ export class AppComponent {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
       this.authService.authenticationState.subscribe(state => {
-        console.log('Auth changed ', state);
+        console.log('Auth changed: ', state);
         if (state) {
           this.router.navigate(['members', 'dashboard']);
         } else {

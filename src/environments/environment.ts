@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  LOGIN_URL : 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyAR4Yezxk7Ao4qeFntu7tIvE7pH28Eh64Y',
   USERS_URL : 'https://momentum-retail-practical-test.firebaseio.com/clients/',
   ACCOUNTS_URL : 'https://momentum-retail-practical-test.firebaseio.com/accounts/'
 };

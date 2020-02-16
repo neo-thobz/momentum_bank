@@ -9,15 +9,16 @@ import { UserDataService } from 'src/app/services/user-data.service';
 })
 export class DashboardPage implements OnInit {
 
-  userData = null;
+  userData: any;
 
   constructor(private authService: AuthenticationService, private userService: UserDataService) { }
 
   ngOnInit() {
-    // this.userService.getClientDetails().subscribe(res => {
-    //   console.log(res);
-    //   this.userData = res;
-    // });
+    // this.userService.getClientDetails();
+    this.userService.getClientDetails().subscribe(res => {
+      console.log('Client Details: ', res);
+      this.userData = res;
+    });
   }
 
   logOut() {

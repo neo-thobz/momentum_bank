@@ -1,11 +1,17 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { Storage } from '@ionic/storage';
 import { Platform } from '@ionic/angular';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { HttpClient } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
-const TOKEN_KEY = 'auth-token';
-const LOCAL_KEY = 'local-id';
+const TOKEN_KEY = 'auth_token';
+const LOCAL_ID = 'local_id';
+const httpOptions = {
+  headers: new HttpHeaders({
+    'Content-Type':  'application/json'
+  })
+};
 
 @Injectable({
   providedIn: 'root'
@@ -15,33 +21,27 @@ export class AuthenticationService {
 
   authenticationState = new BehaviorSubject(false);
 
-  constructor(public fbAuth: AngularFireAuth, private storage: Storage, private plat: Platform) {
+  constructor(public http: HttpClient, private plat: Platform) {
     this.plat.ready().then(() => {
       this.checkToken();
     });
   }
 
   async login(email: string, password: string) {
+    const userData = { email, password, returnSecureToken : true };
 
-    try {
-      const res = await this.fbAuth.auth.signInWithEmailAndPassword(email, password);
-
-      this.fbAuth.auth.currentUser.getIdToken(true).then((token) => this.storage.set(TOKEN_KEY, token));
-
-      console.log(this.fbAuth.auth.currentUser.uid);
-
+    return this.http.post<any>(environment.LOGIN_URL, userData, httpOptions).subscribe( data => {
+      localStorage.setItem(TOKEN_KEY, data.idToken);
+      localStorage.setItem(LOCAL_ID, data.localId);
       this.authenticationState.next(true);
-
-    } catch (err) {
-      console.dir(err);
-      return this.authenticationState.next(false);
-    }
+    }, error => {
+      console.log('error: ', error.error);
+    });
   }
 
   async logOut() {
+    localStorage.clear();
     this.authenticationState.next(false);
-    await this.storage.remove(TOKEN_KEY);
-    this.fbAuth.auth.signOut();
   }
 
   isAuthenticated() {
@@ -49,8 +49,7 @@ export class AuthenticationService {
   }
 
   async checkToken() {
-    const res = await this.storage.get(TOKEN_KEY);
-    if (res) {
+    if (localStorage.getItem(TOKEN_KEY)) {
       this.authenticationState.next(true);
     }
   }
