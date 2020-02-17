@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start">
+    <ion-buttons slot="end">
       <ion-button (click)="logOut()">
         <ion-icon slot="icon-only" name="log-out"></ion-icon>
       </ion-button>
@@ -9,11 +9,15 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-item>
-    <ion-label>
-      {{ userData?.name ? userData?.name : '-' }}
-    </ion-label>
-  </ion-item>
-
+<ion-content padding *ngIf="userData">
+  <ion-label >Welcome {{ userData.name ? userData.name : 'Back' }} </ion-label>
+  
+  <ion-list>
+    <ion-item button *ngFor="let item of userData?.accounts" [routerLink]="['/','members','accounts', item]">
+      <ion-label>
+        <!-- deleted ngIf user -->
+        <p> {{ item }} </p> 
+      </ion-label>
+    </ion-item>
+  </ion-list>
 </ion-content>

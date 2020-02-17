@@ -4,21 +4,22 @@ import { environment } from 'src/environments/environment';
 
 const API_URL = environment.API_URL;
 const TOKEN_KEY = 'auth_token';
-const LOCAL_KEY = 'local_id';
 
 @Injectable({
   providedIn: 'root'
 })
+export class AccountManagementService {
 
-export class UserDataService {
-
-  localKey = localStorage.getItem(LOCAL_KEY);
   tokenKey = localStorage.getItem(TOKEN_KEY);
 
   constructor(private http: HttpClient) { }
 
-  getClientDetails() {
-   return this.http.get<any>(`${API_URL}clients/${this.localKey}.json?auth=${this.tokenKey}`);
+  getAccountDetails(accountNumber: string) {
+    return this.http.get<any>(`${API_URL}accounts/${accountNumber}.json?auth=${this.tokenKey}`);
+  }
+
+  setAccountBalance(accountNumber: string, accountInfo: Account) {
+    return this.http.put<any>(`${API_URL}accounts/${accountNumber}.json?auth=${this.tokenKey}`, accountInfo);
   }
 
 }

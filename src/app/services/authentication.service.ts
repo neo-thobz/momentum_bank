@@ -27,9 +27,8 @@ export class AuthenticationService {
     });
   }
 
-  async login(email: string, password: string) {
+  login(email: string, password: string) {
     const userData = { email, password, returnSecureToken : true };
-
     return this.http.post<any>(environment.LOGIN_URL, userData, httpOptions).subscribe( data => {
       localStorage.setItem(TOKEN_KEY, data.idToken);
       localStorage.setItem(LOCAL_ID, data.localId);
@@ -39,7 +38,7 @@ export class AuthenticationService {
     });
   }
 
-  async logOut() {
+  logOut() {
     localStorage.clear();
     this.authenticationState.next(false);
   }
@@ -48,10 +47,9 @@ export class AuthenticationService {
     return this.authenticationState.value;
   }
 
-  async checkToken() {
+  checkToken() {
     if (localStorage.getItem(TOKEN_KEY)) {
       this.authenticationState.next(true);
     }
   }
-
 }
