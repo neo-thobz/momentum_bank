@@ -8,6 +8,46 @@
 </ion-header>
 
 <ion-content>
-  <p>Accounts data here</p>
-  <p *ngIf="account">Balance: {{ account.balance }}</p>
+  <div *ngIf="account">
+    <h3>Account balance: R {{ account.balance }}</h3>
+    <h3 *ngIf="hasOverDraft">Overdraft balance: R {{ account.overdraft }} </h3>
+    
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Deposit Cash</ion-card-title>
+      </ion-card-header>
+      <ion-card-content >
+        <ion-input type="number" placeholder="Amount" [(ngModel)]="depositAmount"></ion-input>
+        <ion-button (click)="depositCash()">
+          <ion-icon slot="start" name="add"></ion-icon>
+          Deposit Cash
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Withdraw Cash</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-input type="number" placeholder="Amount" [(ngModel)]="withdrawalAmount"></ion-input>
+        <ion-button (click)="withdrawCash()">
+          <ion-icon slot="start" name="remove"></ion-icon>
+          Withdraw Cash
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <div *ngIf="!account">
+    <div class="ion-padding custom-skeleton">
+      <ion-title>loading...</ion-title>
+      <ion-skeleton-text animated ></ion-skeleton-text>
+      <ion-skeleton-text animated ></ion-skeleton-text>
+      <ion-skeleton-text animated ></ion-skeleton-text>
+      <ion-skeleton-text animated ></ion-skeleton-text>
+      <ion-skeleton-text animated ></ion-skeleton-text>
+    </div>
+  </div>
+
 </ion-content>

@@ -4,20 +4,79 @@
       <ion-button (click)="logOut()">
         <ion-icon slot="icon-only" name="log-out"></ion-icon>
       </ion-button>
+      <ion-button  [routerLink]="['/','members','accounts', 'item']">
+        <ion-icon slot="icon-only" name="log-in">next</ion-icon>
+      </ion-button>
     </ion-buttons>
     <ion-title>My Dashboard</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding *ngIf="userData">
-  <ion-label >Welcome {{ userData.name ? userData.name : 'Back' }} </ion-label>
-  
-  <ion-list>
-    <ion-item button *ngFor="let item of userData?.accounts" [routerLink]="['/','members','accounts', item]">
-      <ion-label>
-        <!-- deleted ngIf user -->
-        <p> {{ item }} </p> 
-      </ion-label>
-    </ion-item>
-  </ion-list>
+<ion-content >
+ 
+  <div *ngIf="userData">
+    <h3>Welcome {{ userData.name ? userData.name : 'Back' }} </h3>
+    <ion-list>
+      <ion-label>Below is a list of your accounts, click on one to view details.</ion-label>
+      <ion-item button *ngFor="let item of userData?.accounts" [routerLink]="['/','members','accounts', item]">
+        <ion-label>
+          <p> {{ item }} </p> 
+        </ion-label>
+      </ion-item>
+    </ion-list>
+    <ion-button (click)="openNewAccount()">
+      <ion-icon slot="start" name="card"></ion-icon>
+      Open new account
+    </ion-button>
+  </div>
+ 
+  <div *ngIf="!userData">
+    <ion-list>
+      <ion-list-header>
+        <ion-label>
+          <ion-skeleton-text animated style="width: 20%"></ion-skeleton-text>
+        </ion-label>
+      </ion-list-header>
+      <ion-item>
+        <ion-label>
+          <h3>
+            <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+          </h3>
+          <p>
+            <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+          </p>
+          <p>
+            <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+          </p>
+        </ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          <h3>
+            <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+          </h3>
+          <p>
+            <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+          </p>
+          <p>
+            <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+          </p>
+        </ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          <h3>
+            <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+          </h3>
+          <p>
+            <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+          </p>
+          <p>
+            <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+          </p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+
 </ion-content>
