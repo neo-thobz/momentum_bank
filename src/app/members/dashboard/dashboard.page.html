@@ -1,11 +1,9 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar  color="primary">
     <ion-buttons slot="end">
       <ion-button (click)="logOut()">
         <ion-icon slot="icon-only" name="log-out"></ion-icon>
-      </ion-button>
-      <ion-button  [routerLink]="['/','members','accounts', 'item']">
-        <ion-icon slot="icon-only" name="log-in">next</ion-icon>
+        <ion-label>Sign Out</ion-label>
       </ion-button>
     </ion-buttons>
     <ion-title>My Dashboard</ion-title>

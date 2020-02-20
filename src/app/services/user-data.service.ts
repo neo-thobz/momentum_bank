@@ -12,8 +12,8 @@ const LOCAL_KEY = 'local_id';
 
 export class UserDataService {
 
-  localKey = localStorage.getItem(LOCAL_KEY);
-  tokenKey = localStorage.getItem(TOKEN_KEY);
+  localKey = sessionStorage.getItem(LOCAL_KEY);
+  tokenKey = sessionStorage.getItem(TOKEN_KEY);
 
   constructor(private http: HttpClient) { }
 

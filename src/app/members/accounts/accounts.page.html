@@ -17,7 +17,16 @@
         <ion-card-title>Deposit Cash</ion-card-title>
       </ion-card-header>
       <ion-card-content >
-        <ion-input type="number" placeholder="Amount" [(ngModel)]="depositAmount"></ion-input>
+        <ion-item>
+          <ion-label>R </ion-label>
+          <ion-input type="number" placeholder="Amount" [(ngModel)]="depositAmount"></ion-input>
+        </ion-item>
+        
+        <ion-item>
+          <ion-label>Use overdraft</ion-label>
+          <ion-toggle *ngIf="hasOverDraft" [(ngModel)]="depositOverDraft"></ion-toggle>
+        </ion-item>
+
         <ion-button (click)="depositCash()">
           <ion-icon slot="start" name="add"></ion-icon>
           Deposit Cash
@@ -30,7 +39,16 @@
         <ion-card-title>Withdraw Cash</ion-card-title>
       </ion-card-header>
       <ion-card-content>
-        <ion-input type="number" placeholder="Amount" [(ngModel)]="withdrawalAmount"></ion-input>
+        <ion-item>
+          <ion-label>R </ion-label>
+          <ion-input type="number" placeholder="Amount" [(ngModel)]="withdrawalAmount"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Use overdraft</ion-label>
+          <ion-toggle *ngIf="hasOverDraft" [(ngModel)]="withdrawFromOverDraft"></ion-toggle>
+        </ion-item>
+
         <ion-button (click)="withdrawCash()">
           <ion-icon slot="start" name="remove"></ion-icon>
           Withdraw Cash

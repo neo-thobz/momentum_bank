@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { AccountManagementService } from 'src/app/services/account-management.service';
 import { ActivatedRoute } from '@angular/router';
+import { ToastController } from '@ionic/angular';
+import { AccountManagementService } from 'src/app/services/account-management.service';
 
 @Component({
   selector: 'app-accounts',
@@ -12,13 +13,16 @@ export class AccountsPage implements OnInit {
 
   account: any;
   accountNumber = '';
-  bankBalance = 0;
   depositAmount = 0;
   withdrawalAmount = 0;
   theDeterminate = 0;
   hasOverDraft = false;
+  depositOverDraft = false;
+  withdrawFromOverDraft = false;
+  insufficientFundsMsg = 'You do not have enough funds for that withdrawal';
 
-  constructor(private activatedRoute: ActivatedRoute, private accountService: AccountManagementService) { }
+  constructor(private activatedRoute: ActivatedRoute, private accountService: AccountManagementService,
+              public toastController: ToastController) { }
 
   ngOnInit() {}
 
@@ -29,38 +33,77 @@ export class AccountsPage implements OnInit {
       if (res.hasOwnProperty('overdraft')) {
         this.hasOverDraft = true;
       }
-
       this.account = res;
     });
   }
 
   depositCash() {
-    // set up the data
     if (this.hasOverDraft) {
-      // need to do the logic of adding here
-      const data = {balance: '', overdraft: ''};
-      this.performTransaction(data);
+      if (this.depositOverDraft) {
+        this.theDeterminate = this.account.overdraft + this.depositAmount;
+        const data = {balance: this.account.balance, overdraft: this.theDeterminate};
+        this.performTransaction(data);
+      } else {
+        this.theDeterminate = this.account.balance + this.depositAmount;
+        const data = {balance: this.theDeterminate, overdraft: this.account.overdraft};
+        this.performTransaction(data);
+      }
     } else {
-      const data = {accountNumber: this.accountNumber, balance: ''};
+      this.theDeterminate = this.account.balance + this.depositAmount;
+      const data = {accountNumber: this.accountNumber, balance: this.theDeterminate};
       this.performTransaction(data);
-      console.log('done... depositing');
     }
   }
 
   withdrawCash() {
     if (this.hasOverDraft) {
-      const data = {balance: '', overdraft: ''};
-      this.performTransaction(data);
+      if (this.withdrawFromOverDraft) {
+        this.theDeterminate = this.account.overdraft - this.depositAmount;
+
+        if (this.theDeterminate > 0) {
+          const data = {balance: this.account.balance, overdraft: this.theDeterminate};
+          this.performTransaction(data);
+        } else {
+          this.presentToast(this.insufficientFundsMsg);
+        }
+      } else {
+        this.theDeterminate = this.account.balance + this.depositAmount;
+
+        if (this.theDeterminate > 0) {
+          const data = {balance: this.theDeterminate, overdraft: this.account.overdraft};
+          this.performTransaction(data);
+        } else {
+          this.presentToast(this.insufficientFundsMsg);
+        }
+      }
     } else {
-      const data = {accountNumber: this.accountNumber, balance: ''};
-      this.performTransaction(data);
+      this.theDeterminate = this.account.balance - this.withdrawalAmount;
+
+      if (this.theDeterminate > 0) {
+        const data = {accountNumber: this.accountNumber, balance: this.theDeterminate};
+        this.performTransaction(data);
+      } else {
+        this.presentToast(this.insufficientFundsMsg);
+      }
     }
   }
 
   performTransaction(data: any) {
     this.accountService.setAccountBalance(this.accountNumber, data).subscribe(res => {
-      console.log(res);
+      this.account = res;
+      this.presentToast('Transaction was successful');
+    },
+    err => {
+      this.presentToast('There was an error with your request, please try again later');
+      console.log(err.error);
     });
   }
 
+  async presentToast(msg: string) {
+    const toast = await this.toastController.create({
+      message: msg,
+      duration: 10000
+    });
+    toast.present();
+  }
 }

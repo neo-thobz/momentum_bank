@@ -12,6 +12,8 @@ import { UserDataService } from 'src/app/services/user-data.service';
 export class DashboardPage implements OnInit {
 
   userData: any;
+  accountList = [];
+  hasOverdraft = false;
 
   constructor(private authService: AuthenticationService, private userService: UserDataService,
               private accountService: AccountManagementService) { }
@@ -22,8 +24,11 @@ export class DashboardPage implements OnInit {
     this.userService.getClientDetails().subscribe(res => {
         if (res.accounts.hasOwnProperty('name')) {
           this.userData = res.accounts;
+          this.accountList = res.accounts.accounts;
         } else {
           this.userData = res;
+          this.hasOverdraft = true;
+          this.accountList = res.accounts;
         }
     }, err => {
       console.log('err: ', err.error);
@@ -31,8 +36,10 @@ export class DashboardPage implements OnInit {
   }
 
   openNewAccount() {
-    console.log('going to add account here...');
-    this.accountService.createNewAccount();
+    this.accountService.createNewAccount(this.accountList, this.hasOverdraft).subscribe(res => {
+      // still testing
+      console.log(res);
+    });
   }
 
   logOut() {
