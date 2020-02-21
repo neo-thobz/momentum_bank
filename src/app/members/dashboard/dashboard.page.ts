@@ -11,7 +11,7 @@ import { UserDataService } from 'src/app/services/user-data.service';
 
 export class DashboardPage implements OnInit {
 
-  userData: any;
+  userData = null;
   accountList = [];
   hasOverdraft = false;
 
@@ -21,26 +21,32 @@ export class DashboardPage implements OnInit {
   ngOnInit() { }
 
   ionViewWillEnter() {
+    this.getUserDetails();
+  }
+
+  getUserDetails() {
     this.userService.getClientDetails().subscribe(res => {
-        if (res.accounts.hasOwnProperty('name')) {
-          this.userData = res.accounts;
-          this.accountList = res.accounts.accounts;
-        } else {
-          this.userData = res;
-          this.hasOverdraft = true;
-          this.accountList = res.accounts;
-        }
-    }, err => {
-      console.log('err: ', err.error);
-    });
+      if (res.accounts.hasOwnProperty('name')) {
+        this.userData = res.accounts;
+        this.accountList = res.accounts.accounts;
+      } else {
+        this.userData = res;
+        this.hasOverdraft = true;
+        this.accountList = res.accounts;
+      }
+  }, err => {
+    console.log('err: ', err.error);
+  });
   }
 
   openNewAccount() {
     this.accountService.createNewAccount(this.accountList, this.hasOverdraft).subscribe(res => {
-      // still testing
-      console.log(res);
+      this.userData = null;
+      this.getUserDetails();
+    }, err => {
+      console.log('err: ', err.error);
     });
-  }
+   }
 
   logOut() {
     this.authService.logOut();

@@ -30,24 +30,21 @@ export class AccountsPage implements OnInit {
     this.accountNumber = this.activatedRoute.snapshot.paramMap.get('id');
 
     this.accountService.getAccountDetails(this.accountNumber).subscribe(res => {
-      if (res.hasOwnProperty('overdraft')) {
-        this.hasOverDraft = true;
+      if (res !== null) {
+        if (res.hasOwnProperty('overdraft')) {
+          this.hasOverDraft = true;
+        }
+        this.account = res;
+      } else {
+        // go back
+        this.presentToast('Unable to load account data');
       }
-      this.account = res;
     });
   }
 
   depositCash() {
     if (this.hasOverDraft) {
-      if (this.depositOverDraft) {
-        this.theDeterminate = this.account.overdraft + this.depositAmount;
-        const data = {balance: this.account.balance, overdraft: this.theDeterminate};
-        this.performTransaction(data);
-      } else {
-        this.theDeterminate = this.account.balance + this.depositAmount;
-        const data = {balance: this.theDeterminate, overdraft: this.account.overdraft};
-        this.performTransaction(data);
-      }
+      this.overdraftDeposit();
     } else {
       this.theDeterminate = this.account.balance + this.depositAmount;
       const data = {accountNumber: this.accountNumber, balance: this.theDeterminate};
@@ -55,32 +52,48 @@ export class AccountsPage implements OnInit {
     }
   }
 
+  overdraftDeposit() {
+    if (this.depositOverDraft) {
+      this.theDeterminate = this.account.overdraft + this.depositAmount;
+      const data = {balance: this.account.balance, overdraft: this.theDeterminate};
+      this.performTransaction(data);
+    } else {
+      this.theDeterminate = this.account.balance + this.depositAmount;
+      const data = {balance: this.theDeterminate, overdraft: this.account.overdraft};
+      this.performTransaction(data);
+    }
+  }
+
   withdrawCash() {
     if (this.hasOverDraft) {
-      if (this.withdrawFromOverDraft) {
-        this.theDeterminate = this.account.overdraft - this.depositAmount;
-
-        if (this.theDeterminate > 0) {
-          const data = {balance: this.account.balance, overdraft: this.theDeterminate};
-          this.performTransaction(data);
-        } else {
-          this.presentToast(this.insufficientFundsMsg);
-        }
-      } else {
-        this.theDeterminate = this.account.balance + this.depositAmount;
-
-        if (this.theDeterminate > 0) {
-          const data = {balance: this.theDeterminate, overdraft: this.account.overdraft};
-          this.performTransaction(data);
-        } else {
-          this.presentToast(this.insufficientFundsMsg);
-        }
-      }
+      this.overdraftWithdrawal();
     } else {
       this.theDeterminate = this.account.balance - this.withdrawalAmount;
 
       if (this.theDeterminate > 0) {
         const data = {accountNumber: this.accountNumber, balance: this.theDeterminate};
+        this.performTransaction(data);
+      } else {
+        this.presentToast(this.insufficientFundsMsg);
+      }
+    }
+  }
+
+  overdraftWithdrawal() {
+    if (this.withdrawFromOverDraft) {
+      this.theDeterminate = this.account.overdraft - this.depositAmount;
+
+      if (this.theDeterminate > 0) {
+        const data = {balance: this.account.balance, overdraft: this.theDeterminate};
+        this.performTransaction(data);
+      } else {
+        this.presentToast(this.insufficientFundsMsg);
+      }
+    } else {
+      this.theDeterminate = this.account.balance - this.depositAmount;
+
+      if (this.theDeterminate > 0) {
+        const data = {balance: this.theDeterminate, overdraft: this.account.overdraft};
         this.performTransaction(data);
       } else {
         this.presentToast(this.insufficientFundsMsg);
@@ -102,7 +115,7 @@ export class AccountsPage implements OnInit {
   async presentToast(msg: string) {
     const toast = await this.toastController.create({
       message: msg,
-      duration: 10000
+      duration: 5000
     });
     toast.present();
   }

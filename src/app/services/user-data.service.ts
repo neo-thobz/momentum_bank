@@ -18,7 +18,7 @@ export class UserDataService {
   constructor(private http: HttpClient) { }
 
   getClientDetails() {
-   return this.http.get<any>(`${API_URL}clients/${this.localKey}.json?auth=${this.tokenKey}`);
+   return this.http.get<any>(`${API_URL}/clients/${this.localKey}.json?auth=${this.tokenKey}`);
   }
 
 }
