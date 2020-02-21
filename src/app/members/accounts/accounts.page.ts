@@ -36,7 +36,6 @@ export class AccountsPage implements OnInit {
         }
         this.account = res;
       } else {
-        // go back
         this.presentToast('Unable to load account data');
       }
     });
@@ -52,6 +51,7 @@ export class AccountsPage implements OnInit {
     }
   }
 
+  // TODO: Try to simplify this
   overdraftDeposit() {
     if (this.depositOverDraft) {
       this.theDeterminate = this.account.overdraft + this.depositAmount;
@@ -70,7 +70,7 @@ export class AccountsPage implements OnInit {
     } else {
       this.theDeterminate = this.account.balance - this.withdrawalAmount;
 
-      if (this.theDeterminate > 0) {
+      if (this.theDeterminate >= 0) {
         const data = {accountNumber: this.accountNumber, balance: this.theDeterminate};
         this.performTransaction(data);
       } else {
@@ -79,20 +79,21 @@ export class AccountsPage implements OnInit {
     }
   }
 
+  // TODO: Try to simplify this
   overdraftWithdrawal() {
     if (this.withdrawFromOverDraft) {
-      this.theDeterminate = this.account.overdraft - this.depositAmount;
+      this.theDeterminate = this.account.overdraft - this.withdrawalAmount;
 
-      if (this.theDeterminate > 0) {
+      if (this.theDeterminate >= 0) {
         const data = {balance: this.account.balance, overdraft: this.theDeterminate};
         this.performTransaction(data);
       } else {
         this.presentToast(this.insufficientFundsMsg);
       }
     } else {
-      this.theDeterminate = this.account.balance - this.depositAmount;
+      this.theDeterminate = this.account.balance - this.withdrawalAmount;
 
-      if (this.theDeterminate > 0) {
+      if (this.theDeterminate >= 0) {
         const data = {balance: this.theDeterminate, overdraft: this.account.overdraft};
         this.performTransaction(data);
       } else {
@@ -104,6 +105,9 @@ export class AccountsPage implements OnInit {
   performTransaction(data: any) {
     this.accountService.setAccountBalance(this.accountNumber, data).subscribe(res => {
       this.account = res;
+      this.depositAmount = 0;
+      this.withdrawalAmount = 0;
+      this.theDeterminate = 0;
       this.presentToast('Transaction was successful');
     },
     err => {
@@ -115,7 +119,7 @@ export class AccountsPage implements OnInit {
   async presentToast(msg: string) {
     const toast = await this.toastController.create({
       message: msg,
-      duration: 5000
+      duration: 2000
     });
     toast.present();
   }

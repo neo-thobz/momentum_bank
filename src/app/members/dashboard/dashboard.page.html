@@ -5,18 +5,18 @@
         <ion-icon slot="icon-only" name="log-out"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>My Dashboard</ion-title>
+    <ion-title class="ion-text-center">My Dashboard</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content >
+<ion-content class="ion-padding">
  
   <div *ngIf="userData">
     <h3>Welcome {{ userData.name ? userData.name : 'Back' }} </h3>
+    <ion-label>Below is a list of your accounts.</ion-label><br/>
+    <ion-label>Scroll through the list of accounts.</ion-label><br/>
+    <ion-label> Click on one to view details. </ion-label><br/>
     <ion-list>
-      <ion-label>Below is a list of your accounts.</ion-label>
-      <ion-label>Scroll through the list of accounts.</ion-label>
-      <ion-label> Click on one to view details. </ion-label>
       <ion-item button *ngFor="let item of userData?.accounts" [routerLink]="['/','members','accounts', item]">
         <ion-label>
           <p> {{ item }} </p> 
